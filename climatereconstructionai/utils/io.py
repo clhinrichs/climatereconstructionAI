@@ -22,7 +22,10 @@ def save_ckpt(ckpt_name, train_stats, savelist):
 
 
 def load_ckpt(ckpt_name, device):
-    ckpt_dict = torch.load(ckpt_name, map_location=device)
+    #CH
+    #ckpt_dict = torch.load(ckpt_name, map_location=device)
+    ckpt_dict = torch.load(ckpt_name, map_location=device, weights_only=FALSE)
+    #CH
     keys = ckpt_dict.keys()
     if "labels" not in keys:
         label = str(ckpt_dict["n_iter"])
