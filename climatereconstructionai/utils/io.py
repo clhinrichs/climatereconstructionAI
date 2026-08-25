@@ -24,7 +24,7 @@ def save_ckpt(ckpt_name, train_stats, savelist):
 def load_ckpt(ckpt_name, device):
     #CH
     #ckpt_dict = torch.load(ckpt_name, map_location=device)
-    ckpt_dict = torch.load(ckpt_name, map_location=device, weights_only=FALSE)
+    ckpt_dict = torch.load(ckpt_name, map_location=device, weights_only=False)
     #CH
     keys = ckpt_dict.keys()
     if "labels" not in keys:

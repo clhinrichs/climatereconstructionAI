@@ -170,7 +170,7 @@ class NetCDFLoader(Dataset):
         else:
             mask = torch.from_numpy(np.array(self.mask_data[ind_data][mask_ds_index][mask_indices]))
         #CH
-	mask[:self.time_steps[0]] = 1
+        mask[:self.time_steps[0]] = 1
         mask[self.time_steps[0]+1:] = 1
 	#CH        
         image = np.array(self.img_data[ind_data][ds_index][img_indices])
