@@ -1,5 +1,8 @@
 import copy
 import os
+import pandas as pd
+import xarray as xr
+
 
 import numpy as np
 import torch
@@ -47,6 +50,40 @@ def train(arg_file=None):
     # create data sets
     dataset_train = NetCDFLoader(cfg.data_root_dir, cfg.data_names, cfg.mask_dir, cfg.mask_names, 'train',
                                  cfg.data_types, cfg.time_steps)
+
+    # Check effective seasonal distribution of training samples
+
+    MONTH_TO_SEASON = {
+        12: "DJF", 1: "DJF", 2: "DJF",
+        3: "MAM", 4: "MAM", 5: "MAM",
+        6: "JJA", 7: "JJA", 8: "JJA",
+        9: "SON", 10: "SON", 11: "SON",
+    }
+
+    SEASONS = ["DJF", "MAM", "JJA", "SON"]
+    train_file = cfg.data_root_dir + "/train/" + cfg.data_names[0]
+
+    ds = xr.open_dataset(train_file)
+    time = pd.to_datetime(ds["time"].values)
+
+    # Valid sample-centre indices used by InfiniteSampler
+    start = cfg.time_steps[0]
+    end = len(time) - cfg.time_steps[1]
+
+    sample_times = time[start:end]
+
+    sample_seasons = pd.Series(sample_times).dt.month.map(MONTH_TO_SEASON)
+
+    print("Number of effective training samples:", len(sample_times))
+    print("\nSeasonal distribution:")
+    print(
+        sample_seasons.value_counts(normalize=True)
+        .reindex(SEASONS)
+        .mul(100)
+        .round(2)
+        .astype(str)
+        .add("%")
+    )
 
     dataset_val = NetCDFLoader(cfg.data_root_dir, cfg.val_names, cfg.mask_dir, cfg.mask_names, 'val', cfg.data_types,
                                cfg.time_steps)
