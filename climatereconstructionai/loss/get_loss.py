@@ -2,6 +2,7 @@ import torch
 
 from .feature_loss import FeatureLoss
 from .hole_loss import HoleLoss
+from .hole_loss import GradientLoss
 from .total_variation_loss import TotalVariationLoss
 from .valid_loss import ValidLoss
 from .. import config as cfg
@@ -55,6 +56,9 @@ class loss_criterion(torch.nn.Module):
                 elif loss == 'hole':
                     self.criterions.append(HoleLoss().to(cfg.device))
                     self.tensors.append('hole')
+
+                elif loss == 'grad':
+                    self.criterions.append(GradientLoss().to(cfg.device))
 
                 elif loss == 'tv':
                     self.criterions.append(TotalVariationLoss().to(cfg.device))
