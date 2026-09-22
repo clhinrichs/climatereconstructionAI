@@ -2,6 +2,7 @@ import copy
 import os
 import pandas as pd
 import xarray as xr
+import json
 
 
 import numpy as np
@@ -101,6 +102,19 @@ def train(arg_file=None):
         cfg.conv_factor = max(image_sizes[0])
 
     train_stats = {"mean": dataset_train.img_mean, "std": dataset_train.img_std}
+
+    stats_file = "/work/bb1338/a270109/CRAI/train_stats_all_year.json"
+
+    with open(stats_file, "w") as f:
+        json.dump({
+            "mean": [float(x) for x in dataset_train.img_mean],
+            "std": [float(x) for x in dataset_train.img_std]
+        }, f)
+
+    print("Saved normalization statistics:")
+    print("mean:", dataset_train.img_mean)
+    print("std :", dataset_train.img_std)
+
 
     # define network model
     if len(image_sizes) - cfg.n_target_data > 1:
