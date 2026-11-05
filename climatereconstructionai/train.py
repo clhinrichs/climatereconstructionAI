@@ -86,6 +86,25 @@ def train(arg_file=None):
         .add("%")
     )
 
+##########
+# Hier Experiment, train_stats für das ganze Jahr werden auf Sommer Trainingsdaten angewendet
+#########
+
+    #stats_file = "/work/bb1338/a270109/CRAI/train_stats_all_year.json"
+    stats_file = "/work/bb1338/a270109/CRAI/train_stats_summer.json"
+
+    with open(stats_file, "r") as f:
+        train_stats = json.load(f)
+
+    print("Using fixed all-year normalization:")
+    print("mean:", train_stats["mean"])
+    print("std :", train_stats["std"])
+
+############
+# Ende Experiment
+############
+
+
     dataset_val = NetCDFLoader(cfg.data_root_dir, cfg.val_names, cfg.mask_dir, cfg.mask_names, 'val', cfg.data_types,
                                cfg.time_steps)
     iterator_train = iter(DataLoader(dataset_train, batch_size=cfg.batch_size,
@@ -101,19 +120,25 @@ def train(arg_file=None):
     if cfg.conv_factor is None:
         cfg.conv_factor = max(image_sizes[0])
 
-    train_stats = {"mean": dataset_train.img_mean, "std": dataset_train.img_std}
+#########
+# Hier werden train_stats berechnet
 
-    stats_file = "/work/bb1338/a270109/CRAI/train_stats_all_year.json"
+#    train_stats = {"mean": dataset_train.img_mean, "std": dataset_train.img_std}
 
-    with open(stats_file, "w") as f:
-        json.dump({
-            "mean": [float(x) for x in dataset_train.img_mean],
-            "std": [float(x) for x in dataset_train.img_std]
-        }, f)
+#########
+# Hier werden train stats rausgeschrieben und gespeichert
 
-    print("Saved normalization statistics:")
-    print("mean:", dataset_train.img_mean)
-    print("std :", dataset_train.img_std)
+#    stats_file = "/work/bb1338/a270109/CRAI/train_stats_all_year.json"
+
+#    with open(stats_file, "w") as f:
+#        json.dump({
+#            "mean": [float(x) for x in dataset_train.img_mean],
+#            "std": [float(x) for x in dataset_train.img_std]
+#        }, f)
+
+#    print("Saved normalization statistics:")
+#    print("mean:", dataset_train.img_mean)
+#    print("std :", dataset_train.img_std)
 
 
     # define network model

@@ -32,6 +32,10 @@ def evaluate(arg_file=None, prog_func=None):
 
         if cfg.use_train_stats:
             data_stats = ckpt_dict["train_stats"]
+            print("Checkpoint normalization:")
+            print("mean:", ckpt_dict["train_stats"]["mean"])
+            print("std:", ckpt_dict["train_stats"]["std"])
+
         else:
             data_stats = None
 
