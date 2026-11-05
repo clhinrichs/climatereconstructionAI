@@ -90,15 +90,15 @@ def train(arg_file=None):
 # Hier Experiment, train_stats für das ganze Jahr werden auf Sommer Trainingsdaten angewendet
 #########
 
-    #stats_file = "/work/bb1338/a270109/CRAI/train_stats_all_year.json"
-    stats_file = "/work/bb1338/a270109/CRAI/train_stats_summer.json"
+#    #stats_file = "/work/bb1338/a270109/CRAI/train_stats_all_year.json"
+#   stats_file = "/work/bb1338/a270109/CRAI/train_stats_summer.json"
 
-    with open(stats_file, "r") as f:
-        train_stats = json.load(f)
+#    with open(stats_file, "r") as f:
+#        train_stats = json.load(f)
 
-    print("Using fixed all-year normalization:")
-    print("mean:", train_stats["mean"])
-    print("std :", train_stats["std"])
+#    print("Using fixed all-year normalization:")
+#    print("mean:", train_stats["mean"])
+#    print("std :", train_stats["std"])
 
 ############
 # Ende Experiment
