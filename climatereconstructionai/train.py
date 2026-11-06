@@ -123,7 +123,7 @@ def train(arg_file=None):
 #########
 # Hier werden train_stats berechnet
 
-#    train_stats = {"mean": dataset_train.img_mean, "std": dataset_train.img_std}
+    train_stats = {"mean": dataset_train.img_mean, "std": dataset_train.img_std}
 
 #########
 # Hier werden train stats rausgeschrieben und gespeichert
