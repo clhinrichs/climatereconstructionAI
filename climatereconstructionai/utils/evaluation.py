@@ -121,15 +121,51 @@ def infill(model, dataset, eval_path, output_names, data_stats, xr_dss, i_model)
         for key in ('image', 'mask', 'gt'):
             data_dict[key] = data_dict[key][:, cfg.gt_channels, :, :]
 
+        def print_stats(name, x):
+            x = x.detach().float()
+            x = x[torch.isfinite(x)]
+            print(f"{name}:")
+            print("Mean:", x.mean().item())
+            print("Std: ", x.std(unbiased=False).item())
+
+        print_stats("Normalized GT", data_dict["gt"])
+        print_stats("Normalized output", data_dict["output"])
+
         if steady_mask is not None:
             for key in ('image', 'gt', 'output'):
                 data_dict[key][:, :, steady_mask.type(torch.bool)] = np.nan
+
+        gt = data_dict["gt"]
+        output = data_dict["output"]
+        mask = data_dict["mask"].bool()
+
+        valid = torch.isfinite(gt)
+
+        observed = valid & mask
+        missing = valid & ~mask
+
+        print_stats("GT overall (valid cells)", gt[valid])
+        print_stats("GT observed", gt[observed])
+        print_stats("GT missing", gt[missing])
+        print_stats("Output missing", output[missing])
+        print_stats("Error missing", output[missing] - gt[missing])
 
         data_dict["infilled"] = (1 - data_dict["mask"])
         data_dict["infilled"] *= data_dict["output"]
         data_dict["infilled"] += data_dict["mask"] * data_dict["image"]
 
+        print_stats("Normalized image", data_dict["image"])
+        print_stats("Normalized infilled", data_dict["infilled"])
+
         data_dict["image"] /= data_dict["mask"]
+
+        mask = data_dict["mask"].bool()
+
+        print_stats("GT at observed locations", data_dict["gt"][mask])
+        print_stats("GT at missing locations", data_dict["gt"][~mask])
+
+        print_stats("Output at missing locations", data_dict["output"][~mask])
+        print_stats("Image at observed locations", data_dict["image"][mask])
 
         create_outputs(data_dict, eval_path, output_names, data_stats, xr_dss, i_model, split, index)
 

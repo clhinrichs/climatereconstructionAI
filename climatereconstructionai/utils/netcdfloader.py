@@ -186,7 +186,7 @@ class NetCDFLoader(Dataset):
         ds_index = 0
         current_index = 0
         for l in range(len(self.img_length)):
-            if index > current_index + self.img_length[l]:
+            if index >= current_index + self.img_length[l]:
                 current_index += self.img_length[l]
                 ds_index += 1
         index -= current_index
