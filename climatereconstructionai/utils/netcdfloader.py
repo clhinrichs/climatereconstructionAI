@@ -177,7 +177,13 @@ class NetCDFLoader(Dataset):
         image = torch.from_numpy(np.nan_to_num(image))
 
         if cfg.normalize_data:
-            image = self.img_znorm[ind_data](image)
+            #image = self.img_znorm[ind_data](image)
+            image = (image - self.img_mean[ind_data]) / self.img_std[ind_data]  #CH
+
+        #CH
+        # Replace missing values with zero in normalized space
+        image = torch.nan_to_num(image, nan=0.0)
+        #CH
 
         return image, mask
 
