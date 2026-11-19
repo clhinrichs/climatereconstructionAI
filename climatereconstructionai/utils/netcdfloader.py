@@ -174,7 +174,8 @@ class NetCDFLoader(Dataset):
         mask[self.time_steps[0]+1:] = 1
 	#CH        
         image = np.array(self.img_data[ind_data][ds_index][img_indices])
-        image = torch.from_numpy(np.nan_to_num(image))
+        image = torch.from_numpy(image)
+        #image = torch.from_numpy(np.nan_to_num(image))
 
         if cfg.normalize_data:
             #image = self.img_znorm[ind_data](image)
